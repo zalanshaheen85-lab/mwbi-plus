@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123d32">
+<title>MWBI+ | Nature Intelligence</title>
+<style>
+:root{--bg:#f4f7f2;--ink:#18352c;--muted:#62756b;--green:#1c5945;--green2:#2d795a;--gold:#d9b76c;--card:#fff;--line:#dfe8df}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(135deg,#10392d,#1c5945 55%,#367b58);color:white;padding:28px 18px 24px}
+.wrap{max-width:1000px;margin:auto}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:15px;background:#ffffff20;display:grid;place-items:center;font-size:25px;border:1px solid #ffffff30}
+h1{margin:0;font-size:26px;letter-spacing:.5px}header p{margin:7px 0 0;color:#dceee2}
+main{max-width:1000px;margin:20px auto;padding:0 14px}
+.searchbox{display:flex;gap:8px;flex-wrap:wrap;background:white;padding:12px;border-radius:16px;border:1px solid var(--line);box-shadow:0 5px 20px #193e2c0b}
+input{flex:1;min-width:180px;padding:13px;border:1px solid #d2ded4;border-radius:12px;font-size:16px;outline:none}
+input:focus{border-color:var(--green2);box-shadow:0 0 0 3px #2d795a20}
+button{border:0;border-radius:12px;padding:12px 16px;background:var(--green);color:white;font-weight:700;font-size:15px;cursor:pointer}
+button.secondary{background:#e8f0e8;color:var(--green)}button:hover{filter:brightness(.97)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.tab{background:#e7eee6;color:var(--green);border:1px solid transparent}.tab.active{background:var(--green);color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.card h3{margin:0 0 8px}.card p{color:var(--muted);margin:0;line-height:1.5}
+.tag{display:inline-block;background:#edf4ed;color:#285641;padding:5px 9px;border-radius:99px;font-size:12px;margin:3px 4px 0 0}
+#results{margin-top:16px}.result{padding:18px}
+.result h2{margin:0 0 6px}.result .sub{color:var(--muted);margin:0 0 12px}
+.section{margin:14px 0}.section h3{font-size:16px;margin:0 0 6px;color:#24513c}.section p{margin:0;line-height:1.6}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.notice{background:#fff7e7;border:1px solid #f0dfba;color:#6c5122;padding:12px 14px;border-radius:13px;margin:14px 0;font-size:14px;line-height:1.5}
+.loading{color:var(--muted);padding:16px}.error{color:#8c3b2c}
+footer{color:var(--muted);text-align:center;padding:26px 16px;font-size:13px}
+.hidden{display:none}
+a{color:var(--green2)}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="brand"><div class="logo">🌿</div><div><h1>MWBI+</h1><div style="font-size:12px;letter-spacing:1.5px;color:#cce2d2">MARINE • WILDLIFE • BOTANICAL INTELLIGENCE</div></div></div>
+<p>Explore species, habitats, ecology, conservation, and responsible care.</p>
+</div></header>
+<main>
+<div class="searchbox">
+<input id="search" placeholder="Search any species, animal, plant, coral, fish…" aria-label="Search species">
+<button id="searchBtn">Search</button>
+<button class="secondary" id="randomBtn">Surprise me</button>
+</div>
+<div class="tabs" id="tabs">
+<button class="tab active" data-kind="all">All nature</button><button class="tab" data-kind="animal">Wildlife</button><button class="tab" data-kind="marine">Marine life</button><button class="tab" data-kind="plant">Plants</button>
+</div>
+<div class="notice"><strong>Wildlife responsibility:</strong> This guide is for learning. Whether a species can be kept depends on local laws, conservation status, welfare needs, and whether it is captive-bred. Wild animals should not be taken from nature.</div>
+<div id="results">
+<div class="grid">
+<div class="card"><h3>🐋 Marine life</h3><p>Discover ocean animals, fish, coral, sea turtles, and their habitats.</p></div>
+<div class="card"><h3>🦉 Wildlife</h3><p>Explore mammals, birds, reptiles, amphibians, and invertebrates.</p></div>
+<div class="card"><h3>🌱 Botanical life</h3><p>Learn about trees, flowers, herbs, fungi, and unusual plants.</p></div>
+</div>
+<div class="card" style="margin-top:14px"><h3>Popular searches</h3><div class="actions">
+<button class="secondary quick" data-q="Axolotl">Axolotl</button><button class="secondary quick" data-q="Blue tang">Blue tang</button><button class="secondary quick" data-q="Monstera deliciosa">Monstera</button><button class="secondary quick" data-q="Manta ray">Manta ray</button><button class="secondary quick" data-q="Red panda">Red panda</button><button class="secondary quick" data-q="Venus flytrap">Venus flytrap</button><button class="secondary quick" data-q="Vampire crab">Vampire crab</button>
+</div></div>
+</div>
+</main>
+<footer>MWBI+ • A learning project for nature curiosity and conservation</footer>
+<script>
+const $=s=>document.querySelector(s);
+let currentKind='all';
+const safe=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function wikiUrl(title){return 'https://en.wikipedia.org/wiki/'+encodeURIComponent(title.replace(/ /g,'_'))}
+function googleUrl(q){return 'https://www.google.com/search?q='+encodeURIComponent(q+' species habitat care conservation')}
+function showLoading(q){$('#results').innerHTML=`<div class="card loading">Searching for <strong>${safe(q)}</strong>…</div>`}
+async function searchSpecies(q){
+ q=q.trim(); if(!q)return;
+ showLoading(q);
+ try{
+  const url='https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(q.replace(/ /g,'_'));
+  const r=await fetch(url,{headers:{'Accept':'application/json'}});
+  if(!r.ok)throw new Error('No encyclopedia summary found');
+  const data=await r.json();
+  if(data.type==='disambiguation')throw new Error('This name has multiple meanings. Try a more specific species name.');
+  const title=data.title||q, extract=data.extract||'No summary available.';
+  const thumb=data.thumbnail?.source;
+  const page=data.content_urls?.desktop?.page||wikiUrl(title);
+  const image=thumb?`<img src="${thumb}" alt="${safe(title)}" style="width:100%;max-height:300px;object-fit:cover;border-radius:12px;margin:10px 0">`:'';
+  const kind=currentKind==='all'?'Nature':currentKind==='marine'?'Marine life':currentKind==='plant'?'Botanical life':'Wildlife';
+  $('#results').innerHTML=`<article class="card result">${image}<h2>${safe(title)}</h2><p class="sub">${safe(kind)} • Quick encyclopedia overview</p><div class="section"><h3>Overview</h3><p>${safe(extract)}</p></div><div class="section"><h3>Explore next</h3><p>Use the links below to research habitat, diet, lifespan, conservation, and care requirements from reputable sources. Details vary by species and location.</p></div><div class="actions"><a href="${page}" target="_blank" rel="noopener"><button>Wikipedia details</button></a><a href="${googleUrl(title)}" target="_blank" rel="noopener"><button class="secondary">Search more on Google</button></a><a href="https://www.iucnredlist.org/search?query=${encodeURIComponent(title)}" target="_blank" rel="noopener"><button class="secondary">Conservation status</button></a></div></article>
+<div class="grid" style="margin-top:12px"><div class="card"><h3>🌎 Habitat</h3><p>Look up the species' native range and habitat types. Avoid assuming a pet habitat can mimic its wild environment.</p><div class="actions"><a href="${googleUrl(title+' native habitat range')}" target="_blank" rel="noopener"><button class="secondary">Find habitat</button></a></div></div><div class="card"><h3>🍽️ Diet & ecology</h3><p>Find what it eats, how it behaves, and its role in the ecosystem.</p><div class="actions"><a href="${googleUrl(title+' diet behavior ecology')}" target="_blank" rel="noopener"><button class="secondary">Research diet</button></a></div></div><div class="card"><h3>🏡 Can it be kept?</h3><p>Check legal restrictions, welfare needs, captive-bred availability, space, costs, and expert guidance before considering ownership.</p><div class="actions"><a href="${googleUrl(title+' captive care legal requirements welfare')}" target="_blank" rel="noopener"><button class="secondary">Research care & legality</button></a></div></div></div>`;
+ }catch(e){
+  $('#results').innerHTML=`<div class="card"><h3>Couldn't find a direct summary for “${safe(q)}”.</h3><p class="error">${safe(e.message)}</p><p>Try another spelling or search the web for this species.</p><div class="actions"><a href="${googleUrl(q)}" target="_blank" rel="noopener"><button>Search Google</button></a></div></div>`;
+ }
+}
+$('#searchBtn').addEventListener('click',()=>searchSpecies($('#search').value));
+$('#search').addEventListener('keydown',e=>{if(e.key==='Enter')searchSpecies($('#search').value)});
+$('#randomBtn').addEventListener('click',()=>{const picks=['Okapi','Leafy seadragon','Rafflesia','Snow leopard','Pangolin','Giant Pacific octopus','Baobab'];const q=picks[Math.floor(Math.random()*picks.length)];$('#search').value=q;searchSpecies(q)});
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentKind=b.dataset.kind}));
+document.querySelectorAll('.quick').forEach(b=>b.addEventListener('click',()=>{$('#search').value=b.dataset.q;searchSpecies(b.dataset.q)}));
+</script>
+</body>
+</html>
